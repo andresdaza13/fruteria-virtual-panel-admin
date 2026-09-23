@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda de productos | Proyecto integrador</title>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<!-- Proyecto 3, requisito 1: navegación estructurada dentro de un bloque semántico <nav>.
+     Una lista <ul> de enlaces es la forma semántica de agrupar un menú. -->
+<nav class="nav-principal" aria-label="Navegación principal">
+  <ul class="menu">
+    <li><a href="#catalogo">Tienda</a></li>
+    <li><a href="#panel-admin">Panel de administración</a></li>
+    <!-- Cambia esta URL si tu portafolio vive en otra dirección -->
+    <li><a href="https://andresdaza13.github.io/portafolio/" target="_blank" rel="noopener">Hoja de vida / Portafolio</a></li>
+  </ul>
+</nav>
+
+<header class="cabecera">
+  <div class="zona-marca">
+    <span class="logo"><img src="images/carrito.jpg" alt="Logo de la frutería" width="50" height="50"></span>
+    <div>
+      <h1>Frutería Web</h1>
+      <p class="subtitulo">Proyecto integrador: CSS moderno + JavaScript</p>
+    </div>
+  </div>
+  <div class="zona-acciones">
+    <p class="contador-cabecera">Artículos en el carrito: <span id="contador-carrito">0</span></p>
+    <button id="btn-tema" class="boton boton-secundario">Modo oscuro</button>
+  </div>
+</header>
+
+<!-- Aviso de conexión: JavaScript lo muestra con los eventos online/offline -->
+<p id="aviso-conexion" class="aviso-conexion oculto">
+  Sin conexión a internet. Puedes seguir navegando, pero no podrás confirmar el pedido.
+</p>
+
+<main class="contenedor-principal">
+
+  <!-- ---------- COLUMNA IZQUIERDA: CATÁLOGO ---------- -->
+  <section class="columna-catalogo" id="catalogo">
+    <div class="barra-filtros">
+      <h2>Catálogo</h2>
+      <div class="grupo-filtro">
+        <label for="filtro-categoria">Filtrar por categoría</label>
+        <select id="filtro-categoria">
+          <option value="todos">Todas las categorías</option>
+          <option value="fruta">Frutas</option>
+          <option value="verdura">Verduras</option>
+          <option value="bebida">Bebidas</option>
+        </select>
+      </div>
+    </div>
+    <!-- Este contenedor llega VACÍO: JavaScript crea aquí las tarjetas -->
+    <div id="lista-productos" class="grid-productos"></div>
+  </section>
+
+  <!-- ---------- COLUMNA DERECHA: CARRITO ---------- -->
+  <aside class="panel-carrito">
+    <h2>Tu carrito</h2>
+    <!-- Las líneas del carrito las genera JavaScript -->
+    <div id="items-carrito" class="lista-carrito"></div>
+
+    <!-- Zona de cupones -->
+    <div class="zona-descuento">
+      <label for="input-descuento">¿Tienes un cupón?</label>
+      <div class="fila-descuento">
+        <input type="text" id="input-descuento" placeholder="Ej: DESCUENTO10">
+        <button id="btn-aplicar-descuento" class="boton">Aplicar</button>
+      </div>
+      <p class="ayuda">Prueba con DESCUENTO10, MITAD o ENVIOGRATIS.</p>
+    </div>
+
+    <!-- Resumen de la compra -->
+    <div class="resumen">
+      <p class="linea-resumen">
+        <span>Subtotal</span>
+        <span id="texto-subtotal">$0</span>
+      </p>
+      <p class="linea-resumen oculto" id="linea-descuento">
+        <span>Descuento</span>
+        <span id="texto-descuento">$0</span>
+      </p>
+      <p class="linea-resumen">
+        <span>Envío</span>
+        <span id="texto-envio">$0</span>
+      </p>
+      <p class="linea-resumen linea-total">
+        <span>Total a pagar</span>
+        <span id="texto-total">$0</span>
+      </p>
+    </div>
+
+    <!-- Formulario de compra: al enviarlo evitamos la recarga con preventDefault() -->
+    <form id="form-compra" class="form-compra">
+      <h3>Finalizar compra</h3>
+      <label for="input-nombre" style="font-size: 15px; display: block; margin: 5px;">Nombre completo:
+        <input type="text" id="input-nombre" placeholder="Nombre completo" required>
+      </label>
+      <label for="input-correo" style="font-size: 15px; display: block; margin: 5px;">Correo electrónico:
+        <input type="email" id="input-correo" placeholder="correo@ejemplo.com" required>
+      </label>
+      <button type="submit" class="boton boton-bloque">Confirmar pedido</button>
+    </form>
+
+    <!-- Mensajes del sistema (éxito / error / info / advertencia) -->
+    <p id="mensaje-sistema" class="mensaje oculto"></p>
+
+    <!-- Comprobante del pedido: se llena desde JavaScript -->
+    <div id="panel-boleta" class="boleta oculto"></div>
+  </aside>
+
+</main>
+
+
+     Formulario NUEVO, separado del formulario de compra (#form-compra).
+     Cada <input> tiene su <label for="..."> que apunta a su id. -->
+<section id="panel-admin" class="panel-admin">
+  <h2>Panel de administración</h2>
+  <p class="ayuda">Registra mercancía nueva. Aparecerá al instante en el catálogo.</p>
+
+  <form id="form-admin" class="form-admin">
+    <div class="campo">
+      <label for="admin-nombre">Nombre del ítem</label>
+      <input type="text" id="admin-nombre" placeholder="Ej: kiwi" required>
+    </div>
+
+    <div class="campo">
+      <label for="admin-categoria">Categoría</label>
+      <select id="admin-categoria" required>
+        <option value="fruta">Fruta</option>
+        <option value="verdura">Verdura</option>
+        <option value="bebida">Bebida</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="admin-precio">Precio ($)</label>
+      <input type="number" id="admin-precio" min="0.01" step="0.01" placeholder="Ej: 12.50" required>
+    </div>
+
+    <div class="campo">
+      <label for="admin-stock">Stock inicial</label>
+      <input type="number" id="admin-stock" min="0" step="1" placeholder="Ej: 10" required>
+    </div>
+
+    <div class="campo">
+      <label for="admin-imagen">Imagen del producto</label>
+      <input type="file" id="admin-imagen" accept="image/*" required>
+    </div>
+
+    <div class="campo campo-vista-previa">
+      <span class="etiqueta-vista">Vista previa</span>
+      <img id="admin-preview" class="vista-previa oculto" alt="Vista previa de la imagen seleccionada">
+    </div>
+
+    <div class="acciones-admin">
+      <button type="reset" class="boton boton-neutro">Limpiar</button>
+      <button type="submit" class="boton">Registrar producto</button>
+    </div>
+  </form>
+</section>
+
+<footer class="pie">
+  <p>Proyecto 3 — Panel de administración · Carlos Andrés Caicedo Daza</p>
+</footer>
+
+</body>
+</html>
